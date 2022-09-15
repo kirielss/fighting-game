@@ -10,25 +10,58 @@ c.fillRect(0,0,canvas.width,canvas.height);
 const gravity = 0.7;
 
 class Sprite { // this is the base class for all sprites
-    constructor({position, velocity}) { // position and velocity are within {} so they can be just one object/argument
+    constructor({position, velocity, color = 'red', offset}) { // position and velocity are within {} so they can be just one object/argument
         this.position = position;
         this.velocity = velocity;
+        this.width = 50;
         this.height = 150;
+        this.attackBox = {
+            position: {
+                x: this.position.x,
+                y: this.position.y,
+            },
+            offset: offset,
+            width: 100,
+            height: 50,
+        };
+        this.color = color;
+        this.isAttacking
     }
     draw() {
-        c.fillStyle = 'red';
-        c.fillRect(this.position.x, this.position.y, 50, this.height); // 50x150 is the size of the sprite
+        c.fillStyle = this.color;
+        c.fillRect(this.position.x, this.position.y, this.width, this.height); // 50x150 is the size of the sprite
+
+        // attack box
+        if (this.isAttacking)
+      {
+            c.fillStyle = 'green';
+            c.fillRect(
+                this.attackBox.position.x,
+                this.attackBox.position.y,
+                this.attackBox.width,
+                this.attackBox.height,
+                )
+            }
     }
 
     update() { // this is where we update the position of the sprite
         this.draw();
-
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x ;
+        this.attackBox.position.y = this.position.y;
+        
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 
         if (this.position.y + this.height + this.velocity.y >= canvas.height){
             this.velocity.y = 0;
         } else this.velocity.y += gravity;
+    }
+
+    attack() {
+        this.isAttacking = true;
+        setTimeout(() => {
+            this.isAttacking = false;
+        }, 200)
     }
 }
 
@@ -42,7 +75,12 @@ const player = new Sprite({ // this is the player sprite - locates the player at
     velocity: {
         x: 0,
         y: 0,
+    },
+    offset: {
+        x: 0,
+        y: 0,
     }
+
 })
 
 
@@ -54,7 +92,13 @@ const enemy = new Sprite({ // this is the enemy sprite - locates the player at t
     velocity: {
         x: 0,
         y: 0,
+    },
+    color: 'blue',
+    offset: {
+        x: -50,
+        y: 0,
     }
+
 })
 
 
@@ -84,6 +128,14 @@ const keys = { // this is the object that will hold all the keys assigned to the
 
 // let lastKey; // not sure if i should use this tbh but in case of using go (else if (keys.a.pressed) && (lastKey === 'a'))
 
+function rectangularCollision({rectangle1, rectangle2,}) { // to detect collision between attack box and body
+    return (
+        (rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x) &&
+        (rectangle1.attackBox.position.x <= (rectangle2.position.x + rectangle2.width)) &&
+        (rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y) &&
+        (rectangle1.attackBox.position.y <= (rectangle2.position.y + rectangle2.height))
+    )
+}
 
 function animate() { // this is the main game loop
     window.requestAnimationFrame(animate);
@@ -114,12 +166,37 @@ function animate() { // this is the main game loop
         } else if (keys.ArrowRight.pressed) {
             enemy.velocity.x = 3;
     }
+
+    // detect for collision
+    if (
+        rectangularCollision({
+            rectangle1: player,
+            rectangle2: enemy,
+        })
+         &&
+    player.isAttacking
+        ) { 
+        player.isAttacking = false;
+        console.log('pau');
+    }
+
+    if (
+        rectangularCollision({
+            rectangle1: enemy,
+            rectangle2: player,
+        })
+         &&
+    enemy.isAttacking
+        ) { 
+        enemy.isAttacking = false;
+        console.log('chumbo');
+    }
+
 }
 
 animate();
 
 window.addEventListener('keydown', (event) => {
-    console.log(event.key);
     switch (event.key) {
         //player keys
         case 'd':
@@ -133,6 +210,9 @@ window.addEventListener('keydown', (event) => {
             player.velocity.y = -15;
             }
             break;
+        case 'u':
+            player.attack();
+            break;
 
         // enemy keys
         case 'ArrowRight':
@@ -145,6 +225,9 @@ window.addEventListener('keydown', (event) => {
             if (enemy.position.y + enemy.height + enemy.velocity.y > canvas.height){ // limitation to only one jump
             enemy.velocity.y = -15;
             }
+            break;
+          case '7':
+            enemy.attack();
             break;
     }
 
@@ -168,5 +251,4 @@ window.addEventListener('keyup', (event) => {
             keys.ArrowLeft.pressed = false;
             break;
     }
-    console.log(event.key);
 })
