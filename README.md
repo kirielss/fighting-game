@@ -1,20 +1,20 @@
-#### fighting-game
+# fighting-game
 
 Fighting game prototype using Javascript Canvas
 
-### CONTROLS:
-##PLAYER 1:
+## CONTROLS:
+### PLAYER 1:
 
-#MOVEMENT
+#### MOVEMENT
 A,S,D, SPACEBAR
 
-#ATTACK
+#### ATTACK
 U
 
-##PLAYER 2:
+### PLAYER 2:
 
-#MOVEMENT
+#### MOVEMENT
 ARROWKEYS UP, RIGHT, DOWN, LEFT
 
-#ATTACK
+#### ATTACK
 NUMPAD 7
