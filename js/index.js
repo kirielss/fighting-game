@@ -57,7 +57,18 @@ const player = new Fighter({ // this is the player hitbox - locates the player a
         run: {
             imageSrc: './img/samuraiMack/Run.png',
             framesMax: 8,
-            image: new Image()
+        },
+        jump: {
+            imageSrc: './img/samuraiMack/Jump.png',
+            framesMax: 2,
+        },
+        fall: {
+            imageSrc: './img/samuraiMack/Fall.png',
+            framesMax: 2,
+        },
+        attack1: {
+            imageSrc: './img/samuraiMack/Attack1.png',
+            framesMax: 6,
         }
     }
 })
@@ -100,19 +111,28 @@ function animate() { // this is the main game loop
     enemy.velocity.x = 0;
 
     // player movement
-    player.image = player.sprites.idle.image;
-    player.framesHold = 15;
     if (keys.a.pressed && keys.d.pressed) {
         player.velocity.x = 0;
+        player.switchSprite('idle');
     }
         else if (keys.a.pressed) {
             player.velocity.x = -3;
-            player.image = player.sprites.run.image;
-            player.framesHold = 8;
+            player.switchSprite('run');
+           // player.framesHold = 8; // this is to make the animation slower running backwards
         } else if (keys.d.pressed) {
             player.velocity.x = 4;
-            player.image = player.sprites.run.image;
-            player.framesHold = 5;
+            player.switchSprite('run');
+         //   player.framesHold = 5; // this is to make the animation faster running forwards
+    }
+        else {
+            player.switchSprite('idle');
+        }
+
+    // jumping
+    if (player.velocity.y < 0) {
+        player.switchSprite('jump');
+    } else if (player.velocity.y > 0) {
+        player.switchSprite('fall');
     }
 
     // enemy movement
