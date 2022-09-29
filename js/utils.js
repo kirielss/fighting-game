@@ -11,12 +11,16 @@ function determineWinner({player,enemy, timerId}){
     clearTimeout(timerId);
     if (player.health === enemy.health) {
         document.querySelector('#win').innerHTML = "IT'S A DRAW!";
+        enemy.switchSprite('death');
+        player.switchSprite('death');
     }
     else if (player.health > enemy.health) {
         document.querySelector('#win').innerHTML = "PLAYER 1 WINS!";
+        enemy.switchSprite('death');
     }
     else if (player.health < enemy.health) {
         document.querySelector('#win').innerHTML = "PLAYER 2 WINS!";
+        player.switchSprite('death');
     }
 
 }

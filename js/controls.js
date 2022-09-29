@@ -21,22 +21,23 @@ const keys = { // this is the object that will hold all the keys assigned to the
 };
 
 window.addEventListener('keydown', (event) => {
-    switch (event.key) {
-        //player keys
-        case 'd':
-            keys.d.pressed = true;
-            break;
-        case 'a':
-            keys.a.pressed = true;
-            break;
-        case ' ':
-            if (player.position.y + player.height + player.velocity.y > ground){ // limitation to only one jump
-            player.velocity.y = -15;
-            }
-            break;
-        case 'u':
-            player.attack();
-            break;
+    if (!player.dead && !enemy.dead) {
+        switch (event.key) {
+            //player keys
+            case 'd':
+                keys.d.pressed = true;
+                break;
+            case 'a':
+                keys.a.pressed = true;
+                break;
+            case ' ':
+                if (player.position.y + player.height + player.velocity.y > ground){ // limitation to only one jump
+                player.velocity.y = -15;
+                }
+                break;
+            case 'u':
+                player.attack();
+                break;
 
         // enemy keys
         case 'ArrowRight':
@@ -53,6 +54,7 @@ window.addEventListener('keydown', (event) => {
           case '7':
             enemy.attack();
             break;
+        }
     }
 
 })

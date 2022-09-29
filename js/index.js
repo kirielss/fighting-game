@@ -69,7 +69,23 @@ const player = new Fighter({ // this is the player hitbox - locates the player a
         attack1: {
             imageSrc: './img/samuraiMack/Attack1.png',
             framesMax: 6,
+        },
+        takeHit: {
+            imageSrc: './img/samuraiMack/Take Hit - white silhouette.png',
+            framesMax: 4,
+        },
+        death: {
+            imageSrc: './img/samuraiMack/Death.png',
+            framesMax: 6,
         }
+    },
+    attackBox: {
+        offset: {
+            x: 70,
+            y: 35,
+        },
+        width: 180,
+        height: 50
     }
 })
 
@@ -87,14 +103,54 @@ const enemy = new Fighter({ // this is the enemy hitbox - locates the player at 
     offset: {
         x: -50,
         y: 0,
+    },
+    imageSrc: './img/kenji/idle.png',
+    framesMax: 4,
+    scale: 2.5,
+    offset: {
+        x: 215,
+        y: 167,
+    },
+    sprites: {
+        idle: {
+            imageSrc: './img/kenji/Idle.png',
+            framesMax: 4,
+        },
+        run: {
+            imageSrc: './img/kenji/Run.png',
+            framesMax: 8,
+        },
+        jump: {
+            imageSrc: './img/kenji/Jump.png',
+            framesMax: 2,
+        },
+        fall: {
+            imageSrc: './img/kenji/Fall.png',
+            framesMax: 2,
+        },
+        attack1: {
+            imageSrc: './img/kenji/Attack1.png',
+            framesMax: 4,
+        },
+        takeHit: {
+            imageSrc: './img/kenji/Take hit.png',
+            framesMax: 3,
+        },
+        death: {
+            imageSrc: './img/kenji/Death.png',
+            framesMax: 7,
+        }
+    },
+    attackBox: {
+        offset: {
+            x: -170,
+            y: 50,
+        },
+        width: 170,
+        height: 50
     }
 
 })
-
-
-console.log(player);
-
-
 
 decreaseTimer();
 
@@ -104,8 +160,10 @@ function animate() { // this is the main game loop
     c.fillRect(0,0,canvas.width,canvas.height);
     background.update();
     shop.update();
+    c.fillStyle ='rgba(255,255,255, 0.1)';
+    c.fillRect(0,0, canvas.width, canvas.height)
     player.update();
-    //commenting out until gets the sprite enemy.update();
+    enemy.update();
 
     player.velocity.x = 0;
     enemy.velocity.x = 0;
@@ -128,7 +186,7 @@ function animate() { // this is the main game loop
             player.switchSprite('idle');
         }
 
-    // jumping
+    // player jumping
     if (player.velocity.y < 0) {
         player.switchSprite('jump');
     } else if (player.velocity.y > 0) {
@@ -138,39 +196,74 @@ function animate() { // this is the main game loop
     // enemy movement
     if (keys.ArrowLeft.pressed && keys.ArrowRight.pressed) {
         enemy.velocity.x = 0;
+        enemy.switchSprite('idle');
     }
         else if (keys.ArrowLeft.pressed) {
-            enemy.velocity.x = -3;
+            enemy.velocity.x = -8;
+            enemy.switchSprite('run');
         } else if (keys.ArrowRight.pressed) {
-            enemy.velocity.x = 3;
-    }
+            enemy.velocity.x = 6;
+            enemy.switchSprite('run');
+        }
+        else {
+            enemy.switchSprite('idle');
+        }
+
+        // enemy jumping
+        if (enemy.velocity.y < 0) {
+            enemy.switchSprite('jump');
+        } else if (enemy.velocity.y > 0) {
+            enemy.switchSprite('fall');
+        }
 
     // detect for collision
+
+    // enemy gets hit
     if (
         rectangularCollision({
             rectangle1: player,
             rectangle2: enemy,
-        })
-         &&
-    player.isAttacking
-        ) { 
+        }) &&
+        player.isAttacking && player.framesCurrent === 4
+        ) {
+        enemy.health -= 25;
+        enemy.takeHit();
         player.isAttacking = false;
-        enemy.health -= 20;
-        document.querySelector('#enemyHealth').style.width = enemy.health + '%';
+
+        
+    //    document.querySelector('#enemyHealth').style.width = enemy.health + '%';
+        gsap.to('#enemyHealth', {
+            width: enemy.health + '%'
+        })
     }
 
+    // if player misses
+    if (player.isAttacking && player.framesCurrent === 4) {
+        player.isAttacking = false;
+    }
+
+    // player gets hit
     if (
         rectangularCollision({
             rectangle1: enemy,
             rectangle2: player,
-        })
-         &&
-    enemy.isAttacking
+        }) &&
+        enemy.isAttacking && enemy.framesCurrent === 1
         ) { 
+        player.health -= 10;
+        player.takeHit();
         enemy.isAttacking = false;
-        player.health -= 20;
-        document.querySelector('#playerHealth').style.width = player.health + '%';
+
+    //    document.querySelector('#playerHealth').style.width = player.health + '%';
+        gsap.to('#playerHealth', {
+            width: player.health + '%'
+        })
     }
+
+        // if enemy misses
+        if (enemy.isAttacking && enemy.framesCurrent === 1) {
+            enemy.isAttacking = false;
+        }
 
     // end game based on health
     if ((enemy.health <= 0) || (player.health <= 0)) {
