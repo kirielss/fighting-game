@@ -6,7 +6,7 @@ Fighting game prototype using Javascript Canvas
 ### PLAYER 1:
 
 #### MOVEMENT
-A,S,D, SPACEBAR
+W,A,S,D,
 
 #### ATTACK
 U
