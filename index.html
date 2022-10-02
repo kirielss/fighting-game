@@ -17,10 +17,10 @@
     <div style="position: relative; display: inline-block;"> 
 
         <!-- The container for the health bars and timer -->
-        <div
+        <div id="hud"
             style="
                 position: absolute;
-                display: flex;
+                display: none;
                 width: 100%;
                 align-items: center;
                 padding: 20px;
@@ -95,6 +95,62 @@
                 </div>
             </div>
     </div>
+
+    <!-- START SCREEN -->
+    <div
+        id = 'startGame'
+        style="
+            position: absolute;
+            font-size: 25px;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            "
+    >
+
+        <!-- CONTROLS P1 -->
+        <div style="
+                margin-top: 220px
+                "
+                ><h3 style="color: red">PLAYER 1</h3>
+
+                <div>
+                    <p> W: JUMP </p>
+                    <p> U: ATTACK </p>
+                    <p> D: RUN</p>
+                    <p> A: RETREAT</p>
+
+                </div>
+        </div>
+
+        <!-- PRESS ENTER -->
+        <div style="
+                margin-top: 100px;
+                width: 280px;
+                "
+                ><p>PRESS <span style="color: yellow;">ENTER</span> TO CONTINUE</p>
+        </div>
+
+        <!-- CONTROLS P2 -->
+        <div style="
+                margin-top: 220px
+                "
+                ><h3 style="color: blue">PLAYER 2</h3>
+
+                <div>
+                    <p> UP: JUMP </p>
+                    <p> NUM7: ATTACK </p>
+                    <p> LEFT: RUN</p>
+                    <p> RIGHT: RETREAT</p>
+                 
+                
+                </div>
+        </div>
+
+
+    </div>
+
     <div
         id="win"
         style="

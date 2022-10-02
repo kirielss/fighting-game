@@ -152,8 +152,6 @@ const enemy = new Fighter({ // this is the enemy hitbox - locates the player at 
 
 })
 
-decreaseTimer();
-
 function animate() { // this is the main game loop
     window.requestAnimationFrame(animate);
     c.fillStyle = 'black';
@@ -273,4 +271,13 @@ function animate() { // this is the main game loop
     
 }
 
-animate();
+window.addEventListener('keypress', (e) => {
+    if (e.code === 'Enter') {
+        document.querySelector('#hud').style.display = 'flex';
+        document.querySelector('#startGame').style.display = 'none';
+        decreaseTimer();
+        animate();
+    }
+
+ 
+    }, { once: true });

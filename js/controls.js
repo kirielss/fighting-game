@@ -5,7 +5,7 @@ const keys = { // this is the object that will hold all the keys assigned to the
     d: {
         pressed: false,
     },
-    space: {
+    w: {
         pressed: false,
     },
 
@@ -22,15 +22,16 @@ const keys = { // this is the object that will hold all the keys assigned to the
 
 window.addEventListener('keydown', (event) => {
     if (!player.dead && !enemy.dead) {
-        switch (event.key) {
-            //player keys
+
+        //player keys
+        switch (event.key.toLowerCase()) {
             case 'd':
                 keys.d.pressed = true;
                 break;
             case 'a':
                 keys.a.pressed = true;
                 break;
-            case ' ':
+            case 'w':
                 if (player.position.y + player.height + player.velocity.y > ground){ // limitation to only one jump
                 player.velocity.y = -15;
                 }
@@ -38,8 +39,10 @@ window.addEventListener('keydown', (event) => {
             case 'u':
                 player.attack();
                 break;
+        }
 
         // enemy keys
+        switch (event.key) {
         case 'ArrowRight':
             keys.ArrowRight.pressed = true;
             break;
@@ -60,16 +63,19 @@ window.addEventListener('keydown', (event) => {
 })
 
 window.addEventListener('keyup', (event) => {
-    switch (event.key) {
-            //player keys
+        
+    //player keys
+    switch (event.key.toLowerCase()) {
         case 'd':
             keys.d.pressed = false;
             break
         case 'a':
             keys.a.pressed = false;
             break;
+    }
 
-            // enemy keys
+        // enemy keys
+    switch (event.key) {
         case 'ArrowRight':
             keys.ArrowRight.pressed = false;
             break;
