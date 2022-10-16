@@ -18,3 +18,7 @@ ARROWKEYS UP, RIGHT, DOWN, LEFT
 
 #### ATTACK
 NUMPAD 7
+
+INSPIRED BY:
+Chris Courses Tutorial
+https://www.youtube.com/watch?v=vyqbNFMDRGQ
